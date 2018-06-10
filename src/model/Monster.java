@@ -6,6 +6,8 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Random;
 import java.util.Vector;
 
@@ -14,11 +16,18 @@ import javax.swing.ImageIcon;
 import bonus.IncreaseSpeedBonus;
 import bonus.MoreBombBonus;
 
-public class Monster extends MovealeObject implements Runnable {
+public class Monster extends MovealeObject implements Runnable, Observer {
 	private Thread thread;
+	private boolean isDie;
+	private int maxBomb;
+	private int numberOfBombWasCreated;
 
-	public Monster(Position position, EntityManager manager, Direction direction, int speed) {
+	public Monster(Position position, EntityManager manager, Direction direction, int speed, int maxBomb,
+			int numberOfBombWasCreated, boolean isDie) {
 		super(position, manager, direction, speed);
+		this.maxBomb = maxBomb;
+		this.numberOfBombWasCreated = numberOfBombWasCreated;
+		this.setDie(false);
 		image = new ImageIcon("images/monster.png").getImage();
 		setMoveBehavior(new MonsterMove(this));
 	}
@@ -177,7 +186,7 @@ public class Monster extends MovealeObject implements Runnable {
 			}
 		} else if (pos.getX() - this.getPosition().getX() < 0) {
 			if (monstercanmove(pos)) {
-				return Direction.W;
+				return this.getDirection();
 			}
 		}
 		if (pos.getY() - this.getPosition().getY() < 0) {
@@ -189,7 +198,7 @@ public class Monster extends MovealeObject implements Runnable {
 				return Direction.S;
 			}
 		}
-		return Direction.MiD;
+		return this.getDirection();
 
 	}
 
@@ -222,56 +231,55 @@ public class Monster extends MovealeObject implements Runnable {
 
 	public Direction avoidBombMove() {
 		Position pos = getClosestBombInRange();
-		Position currPos = new Position(this.getPosition().getX(), this.getPosition().getY());
-		if (pos.getX() == currPos.getX() && pos.getY() == currPos.getY()) {
-			if (checkRight(currPos)) {
+		if (pos.getX() == this.getPosition().getX() && pos.getY() == this.getPosition().getY()) {
+			if (checkRight(this.getPosition())) {
 				return Direction.E;
 			}
-			if (checkLeft(currPos)) {
+			if (checkLeft(this.getPosition())) {
 				return Direction.W;
 			}
-			if (checkUp(currPos)) {
+			if (checkUp(this.getPosition())) {
 				return Direction.N;
 			}
-			if (checkDown(currPos)) {
+			if (checkDown(this.getPosition())) {
 				return Direction.S;
 			}
-		} else if (pos.getY() == currPos.getY()) {
-			if (checkUp(currPos)) {
+		} else if (pos.getY() == this.getPosition().getY()) {
+			if (checkUp(this.getPosition())) {
 				return Direction.N;
 			}
-			if (checkDown(currPos)) {
+			if (checkDown(this.getPosition())) {
 				return Direction.S;
 			}
-			if (pos.getX() - currPos.getX() > 0) {
-				if (checkLeft(currPos)) {
+			if (pos.getX() - this.getPosition().getX() > 0) {
+				if (checkLeft(this.getPosition())) {
 					return Direction.W;
 				}
 			}
-			if (pos.getX() - currPos.getX() < 0) {
-				if (checkRight(currPos)) {
+			if (pos.getX() - this.getPosition().getX() < 0) {
+				if (checkRight(this.getPosition())) {
 					return Direction.E;
 				}
 			}
-		} else if (pos.getX() == currPos.getX()) {
-			if (checkRight(currPos)) {
+		} else if (pos.getX() == this.getPosition().getX()) {
+			if (checkRight(this.getPosition())) {
 				return Direction.E;
 			}
-			if (checkLeft(currPos)) {
+			if (checkLeft(this.getPosition())) {
 				return Direction.W;
 			}
-			if (pos.getY() - currPos.getY() > 0) {
-				if (checkUp(currPos)) {
+			if (pos.getY() - this.getPosition().getY() > 0) {
+				if (checkUp(this.getPosition())) {
 					return Direction.N;
 				}
 			}
-			if (pos.getY() - currPos.getY() < 0) {
-				if (checkDown(currPos)) {
+			if (pos.getY() - this.getPosition().getY() < 0) {
+				if (checkDown(this.getPosition())) {
 					return Direction.S;
 				}
 			}
 		}
-		return Direction.MiD;
+		return this.direction;
 	}
 
 	public String getPlan() {
@@ -296,6 +304,7 @@ public class Monster extends MovealeObject implements Runnable {
 		} else {
 			return "APPROACH_PLAYER";
 		}
+
 	}
 
 	private Position getClosestPowerup() {
@@ -351,25 +360,55 @@ public class Monster extends MovealeObject implements Runnable {
 		return false;
 	}
 
+	public void putBoom() {
+		if (numberOfBombWasCreated < maxBomb) {
+			Bomb bomb = new Bomb(new Position(this.position.getX(), this.position.getY()), manager);
+			manager.addEntity(bomb);
+
+			((Observable) bomb).addObserver(this);
+			numberOfBombWasCreated++;
+			System.out.println(maxBomb + " Player Bomb current ");
+		}
+
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		numberOfBombWasCreated--;
+	}
+
 	public Direction get_ai_dir() {
 		Direction dir = Direction.MiD;
 		switch (getPlan()) {
 		case "GET_POWERUP": {
-			dir = getApproachMove(getClosestPowerup());
+			// dir = getApproachMove(getClosestPowerup());
+			Position target = getClosestPowerup();
+			List<Direction> lst = getPathDir(target);
+			dir = lst.get(0);
+			lst.remove(0);
+			if (lst.isEmpty()) {
+				manager.removeEntity(manager.getEntityFromPosition(target));
+			}
+			// this.putBoom();
 			// dropBombIfBreakable(manager.getPlayer());
 			break;
 		}
 		case "APPROACH_PLAYER": {
-			Position pos = manager.getPlayer().getPosition();
-			dir = getApproachMove(pos);
-			// dropBombIfBreakable(player);
+			Position target = manager.getPlayer().getPosition();
+			List<Direction> lst = getPathDir(target);
+			dir = lst.get(0);
+			lst.remove(0);
+			if(lst.size()<=2) {
+			// dir = getApproachMove(pos);
+			 this.putBoom();
+			}
 			// if (inBombRange(pos, player->tile_position, player->bomb.range)){
 			// player->plant_bomb = true;
 			// }
 			break;
 		}
 		case "AVOID_BOMB": {
-			dir = avoidBombMove();
+			 dir = avoidBombMove();
 			break;
 		}
 		}
@@ -378,21 +417,21 @@ public class Monster extends MovealeObject implements Runnable {
 
 	public List<Direction> getPathDir(Position pos) {
 		List<Direction> result = new ArrayList<>();
-		AStar aStar = new AStar(manager);
-		List<Node> lst = aStar.findPath(this.position.getX() / 50, this.position.getY() / 50, pos.getX() / 50,
-				pos.getY() / 50);
+		AStarAlgorithm aStar = new AStarAlgorithm(manager.theBrickArr(), this.getPosition().getY() / 50,
+				this.getPosition().getX() / 50, pos.getY() / 50, pos.getX() / 50);
+		List<Node> lst = aStar.findPath();
 		for (int i = 0; i < lst.size() - 1; i++) {
 			int j = i + 1;
-			if (lst.get(i).getPosX() - lst.get(j).getPosX() < 0 && lst.get(i).getPosY() - lst.get(j).getPosY() == 0) {
-				result.add(Direction.S);
-			}
-			if (lst.get(i).getPosX() - lst.get(j).getPosX() > 0 && lst.get(i).getPosY() - lst.get(j).getPosY() == 0) {
+			if (lst.get(i).getRow() - lst.get(j).getRow() < 0 && lst.get(i).getCol() - lst.get(j).getCol() == 0) {
 				result.add(Direction.N);
 			}
-			if (lst.get(i).getPosX() - lst.get(j).getPosX() == 0 && lst.get(i).getPosY() - lst.get(j).getPosY() > 0) {
+			if (lst.get(i).getRow() - lst.get(j).getRow() > 0 && lst.get(i).getCol() - lst.get(j).getCol() == 0) {
+				result.add(Direction.S);
+			}
+			if (lst.get(i).getRow() - lst.get(j).getRow() == 0 && lst.get(i).getCol() - lst.get(j).getCol() > 0) {
 				result.add(Direction.W);
 			}
-			if (lst.get(i).getPosX() - lst.get(j).getPosX() == 0 && lst.get(i).getPosY() - lst.get(j).getPosY() < 0) {
+			if (lst.get(i).getRow() - lst.get(j).getRow() == 0 && lst.get(i).getCol() - lst.get(j).getCol() < 0) {
 				result.add(Direction.E);
 			}
 		}
@@ -426,6 +465,30 @@ public class Monster extends MovealeObject implements Runnable {
 	public void bonus() {
 		// TODO Auto-generated method stub
 
+	}
+
+	public boolean isDie() {
+		return isDie;
+	}
+
+	public void setDie(boolean isDie) {
+		this.isDie = isDie;
+	}
+
+	public int getMaxBomb() {
+		return maxBomb;
+	}
+
+	public void setMaxBomb(int maxBomb) {
+		this.maxBomb = maxBomb;
+	}
+
+	public int getNumberOfBombWasCreated() {
+		return numberOfBombWasCreated;
+	}
+
+	public void setNumberOfBombWasCreated(int numberOfBombWasCreated) {
+		this.numberOfBombWasCreated = numberOfBombWasCreated;
 	}
 
 }

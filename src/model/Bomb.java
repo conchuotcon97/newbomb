@@ -45,8 +45,8 @@ public class Bomb extends Entity implements Runnable {
 				listFlame.add(new Flame(new Position(x, i), manager));
 			}
 			// add list flame vao sau khi bomb no
+			Thread.sleep(1000);
 			manager.addEntity(listFlame);
-			Thread.sleep(100);
 			manager.removeEntity(this);
 			setChanged();
 			notifyObservers();

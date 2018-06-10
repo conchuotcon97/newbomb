@@ -20,6 +20,8 @@ public class AStar {
 	private Node goal;
 	private Node current;
 	private Node[][] nodeList;
+	int width;
+	int height;
 
 	public AStar(EntityManager manager) {
 		initGraph(manager);
@@ -27,10 +29,12 @@ public class AStar {
 	}
 
 	public void initGraph(EntityManager manager) {
-		nodeList = new Node[11][16];
+		width = 16;
+		height = 11;
+		nodeList = new Node[width][height];
 
-		for (int x = 0; x < nodeList.length; x++) {
-			for (int y = 0; y < nodeList[0].length; y++) {
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
 				Entity en = manager.getEntityFromPosition(new Position(x * 50, y * 50));
 				if (en instanceof Wall || en instanceof Brick || en instanceof Bomb) {
 					nodeList[x][y] = new Node(x, y, true);
@@ -42,18 +46,19 @@ public class AStar {
 
 	public void printMap(List<Node> path) {
 
-		for (int j = 0; j < nodeList.length; j++) {
-			for (int i = 0; i < nodeList[0].length; i++) {
-				if (!nodeList[j][i].isBuffable()) {
-					System.out.print(" board");
-				} else if (path.contains(new Node(j, i, true))) {
-					System.out.print(" buff");
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				if (!nodeList[i][j].isBuffable()) {
+					System.out.print(" blank");
+				} else if (path.contains(new Node(i, j, false))) {
+					System.out.print(" go");
 				} else {
-					System.out.print(" go ");
+					System.out.print(" buff ");
 				}
 			}
 			System.out.print("\n");
 		}
+
 	}
 
 	public final List<Node> findPath(int startX, int startY, int goalX, int goalY) {
@@ -169,7 +174,7 @@ public class AStar {
 	 * @return The desired node if the parameters are valid, null otherwise.
 	 */
 	public Node getNode(int x, int y) {
-		if (x >= 0 && x < nodeList.length && y >= 0 && y < nodeList[0].length) {
+		if (x >= 0 && x < width && y >= 0 && y < height) {
 			return nodeList[x][y];
 		} else {
 			return null;
@@ -200,7 +205,7 @@ public class AStar {
 		}
 
 		// Check right node
-		if (x < nodeList.length) {
+		if (x < width) {
 			adjacent = getNode(x + 1, y);
 			if (adjacent != null && adjacent.isBuffable() && !closedList.contains(adjacent)) {
 				adjacentNodes.add(adjacent);
@@ -216,7 +221,7 @@ public class AStar {
 		}
 
 		// Check bottom node
-		if (y < nodeList[0].length) {
+		if (y < height) {
 			adjacent = this.getNode(x, y + 1);
 			if (adjacent != null && adjacent.isBuffable() && !closedList.contains(adjacent)) {
 				adjacentNodes.add(adjacent);
@@ -225,19 +230,19 @@ public class AStar {
 		return adjacentNodes;
 	}
 
-	private List<Node> path(Map<String, Node> path, Node destination) {
-		assert path != null;
-		assert destination != null;
-
-		final List<Node> pathList = new ArrayList<Node>();
-		pathList.add(destination);
-		while (path.containsKey(destination)) {
-			destination = path.get(destination);
-			pathList.add(destination);
-		}
-		Collections.reverse(pathList);
-		return pathList;
-	}
+	// private List<Node> path(Map<String, Node> path, Node destination) {
+	// assert path != null;
+	// assert destination != null;
+	//
+	// final List<Node> pathList = new ArrayList<Node>();
+	// pathList.add(destination);
+	// while (path.containsKey(destination)) {
+	// destination = path.get(destination);
+	// pathList.add(destination);
+	// }
+	// Collections.reverse(pathList);
+	// return pathList;
+	// }
 
 	// public List<Node> bestNode() {// lay ra node no duoc nhieu Brick nhat va gan
 	// nhat
@@ -355,7 +360,7 @@ public class AStar {
 		EntityManager manager = new EntityManager();
 		for (int i = 0; i < arr.length; i++) {
 			for (int j = 0; j < arr[0].length; j++) {
-				Entity en = manager.getEntityFromPosition(new Position(i * 50, j * 50));
+				Entity en = manager.getEntityFromPosition(new Position(j * 50, i * 50));
 				if (en instanceof Wall || en instanceof Brick || en instanceof Bomb) {
 					arr[i][j] = 1;
 				} else {
@@ -373,5 +378,9 @@ public class AStar {
 			System.out.println();
 		}
 
+//		AStar astar = new AStar(manager);
+//		astar.printMap(astar.findPath(1, 1, 2, 1));
+//		System.out.println(astar.findPath(1, 1, 2, 1));
 	}
+
 }

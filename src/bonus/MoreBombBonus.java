@@ -17,7 +17,7 @@ public class MoreBombBonus extends BonusComponent{
 	public MoreBombBonus(Position po, EntityManager manager,MovealeObject player) {
 		super(po,manager);
 		this.player = player;
-		image = new ImageIcon("image/bonus_bomb.png").getImage();
+		image = new ImageIcon("images/bonus_bomb.png").getImage();
 	}
 
 

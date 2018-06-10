@@ -22,8 +22,6 @@ public class EntityManager extends Observable {
 	private List<Entity> list;
 	private Player player;
 	private Player player2;
-	private Map<String, Entity> mapEn = new HashMap<>();
-	private Map<String, AStar> mapAs = new HashMap<>();
 
 	public EntityManager() {
 		player = new Player(new Position(50, 50), this, Direction.N, 50, 2, 0, false);
@@ -56,7 +54,7 @@ public class EntityManager extends Observable {
 		list.add(new Wall(new Position(50 * 13, 0), this));
 		list.add(new Wall(new Position(50 * 14, 0), this));
 		list.add(new Wall(new Position(50 * 15, 0), this));
-		list.add(new Wall(new Position(50 * 16, 0), this));
+		// list.add(new Wall(new Position(50 * 16, 0), this));
 		// //hang ngang north
 		list.add(new Wall(new Position(50, 500), this));
 		list.add(new Wall(new Position(50 * 2, 500), this));
@@ -175,80 +173,83 @@ public class EntityManager extends Observable {
 
 		// Brick
 		list.add(new Brick(new Position(50, 450), this));
-		list.add(new Brick(new Position(100, 450), this));
-		list.add(new Brick(new Position(150, 450), this));
-		list.add(new Brick(new Position(200, 450), this));
-		list.add(new Brick(new Position(350, 350), this));
-		list.add(new Brick(new Position(350, 350), this));
-		list.add(new Brick(new Position(350, 350), this));
-		list.add(new Brick(new Position(350, 350), this));
-		list.add(new Brick(new Position(400, 350), this));
-		list.add(new Brick(new Position(200, 350), this));
-		list.add(new Brick(new Position(150, 350), this));
-		list.add(new Brick(new Position(600, 200), this));
-		list.add(new Brick(new Position(650, 200), this));
-		list.add(new Brick(new Position(550, 200), this));
-		list.add(new Brick(new Position(350, 200), this));
-		list.add(new Brick(new Position(300, 200), this));
-		list.add(new Brick(new Position(50, 300), this));
-		list.add(new Brick(new Position(150, 300), this));
-		list.add(new Brick(new Position(150, 350), this));
-		list.add(new Brick(new Position(100, 350), this));
-
-		list.add(new Brick(new Position(750, 100), this));
-		list.add(new Brick(new Position(300, 50), this));
-		list.add(new Brick(new Position(300, 150), this));
-		list.add(new Brick(new Position(350, 150), this));
-		list.add(new Brick(new Position(400, 250), this));
-		list.add(new Brick(new Position(650, 300), this));
-		list.add(new Brick(new Position(700, 300), this));
-		list.add(new Brick(new Position(700, 350), this));
-		list.add(new Brick(new Position(700, 400), this));
-
-		list.add(new Brick(new Position(50, 150), this));
-		list.add(new Brick(new Position(100, 150), this));
-		list.add(new Brick(new Position(150, 150), this));
-		list.add(new Brick(new Position(150, 200), this));
-		list.add(new Brick(new Position(600, 450), this));
-		list.add(new Brick(new Position(650, 400), this));
-
-		list.add(new Brick(new Position(700, 100), this));
-		list.add(new Brick(new Position(650, 100), this));
-		list.add(new Brick(new Position(650, 50), this));
-		list.add(new Brick(new Position(600, 50), this));
-		list.add(new Brick(new Position(500, 300), this));
-		list.add(new Brick(new Position(500, 350), this));
-		list.add(new Brick(new Position(500, 400), this));
-		list.add(new Brick(new Position(550, 450), this));
-		list.add(new Brick(new Position(400, 450), this));
-		list.add(new Brick(new Position(300, 400), this));
-		list.add(new Brick(new Position(300, 300), this));
-		list.add(new Brick(new Position(250, 300), this));
-
-		list.add(new Brick(new Position(450, 100), this));
-		list.add(new Brick(new Position(500, 100), this));
-		list.add(new Brick(new Position(400, 100), this));
-		list.add(new Brick(new Position(400, 50), this));
-		list.add(new Brick(new Position(300, 50), this));
-		list.add(new Brick(new Position(750, 250), this));
-		list.add(new Brick(new Position(750, 200), this));
-		list.add(new Brick(new Position(750, 150), this));
-		list.add(new Brick(new Position(150, 50), this));
-		list.add(new Brick(new Position(100, 100), this));
-		// Monster
-//		list.add(new Monster(new Position(300, 350), this, Direction.N, 50));
-//		list.add(new Monster(new Position(450, 150), this, Direction.N, 50));
+//		list.add(new Brick(new Position(100, 450), this));
+//		list.add(new Brick(new Position(150, 450), this));
+//		list.add(new Brick(new Position(200, 450), this));
+//		list.add(new Brick(new Position(350, 350), this));
+//		list.add(new Brick(new Position(350, 350), this));
+//		list.add(new Brick(new Position(350, 350), this));
+//		list.add(new Brick(new Position(350, 350), this));
+//		list.add(new Brick(new Position(400, 350), this));
+//		list.add(new Brick(new Position(200, 350), this));
+//		list.add(new Brick(new Position(150, 350), this));
+//		list.add(new Brick(new Position(600, 200), this));
+//		list.add(new Brick(new Position(650, 200), this));
+//		list.add(new Brick(new Position(550, 200), this));
+//		list.add(new Brick(new Position(350, 200), this));
+//		list.add(new Brick(new Position(300, 200), this));
+//		list.add(new Brick(new Position(50, 300), this));
+//		list.add(new Brick(new Position(150, 300), this));
+//		list.add(new Brick(new Position(150, 350), this));
+//		list.add(new Brick(new Position(100, 350), this));
 //
-//		list.add(new Monster(new Position(300, 350), this, Direction.N, 50));
-		list.add(new Monster(new Position(450, 150), this, Direction.N, 50));
+//		list.add(new Brick(new Position(750, 100), this));
+//		list.add(new Brick(new Position(300, 50), this));
+//		list.add(new Brick(new Position(300, 150), this));
+//		list.add(new Brick(new Position(350, 150), this));
+//		list.add(new Brick(new Position(400, 250), this));
+		// list.add(new Brick(new Position(650, 300), this));
+		// list.add(new Brick(new Position(700, 300), this));
+		// list.add(new Brick(new Position(700, 350), this));
+		// list.add(new Brick(new Position(700, 400), this));
+		//
+		// list.add(new Brick(new Position(50, 150), this));
+		// list.add(new Brick(new Position(100, 150), this));
+		// list.add(new Brick(new Position(150, 150), this));
+		// list.add(new Brick(new Position(150, 200), this));
+		// list.add(new Brick(new Position(600, 450), this));
+		// list.add(new Brick(new Position(650, 400), this));
+		//
+		// list.add(new Brick(new Position(700, 100), this));
+		// list.add(new Brick(new Position(650, 100), this));
+		// list.add(new Brick(new Position(650, 50), this));
+		// list.add(new Brick(new Position(600, 50), this));
+		// list.add(new Brick(new Position(500, 300), this));
+		// list.add(new Brick(new Position(500, 350), this));
+		// list.add(new Brick(new Position(500, 400), this));
+		// list.add(new Brick(new Position(550, 450), this));
+		// list.add(new Brick(new Position(400, 450), this));
+		// list.add(new Brick(new Position(300, 400), this));
+		// list.add(new Brick(new Position(300, 300), this));
+		// list.add(new Brick(new Position(250, 300), this));
+		//
+		// list.add(new Brick(new Position(450, 100), this));
+		// list.add(new Brick(new Position(500, 100), this));
+		// list.add(new Brick(new Position(400, 100), this));
+		// list.add(new Brick(new Position(400, 50), this));
+		// list.add(new Brick(new Position(300, 50), this));
+		// list.add(new Brick(new Position(750, 250), this));
+//		list.add(new Brick(new Position(750, 200), this));
+//		list.add(new Brick(new Position(750, 150), this));
+//		list.add(new Brick(new Position(150, 50), this));
+//		list.add(new Brick(new Position(100, 100), this));
+		// Monster
+		// list.add(new Monster(new Position(300, 350), this, Direction.N, 50));
+		// list.add(new Monster(new Position(450, 150), this, Direction.N, 50));
+		//
+		// list.add(new Monster(new Position(300, 350), this, Direction.N, 50));
+		// list.add(new Monster(new Position(450, 150), this, Direction.N, 50);
+		list.add(new Monster(new Position(450, 150), this, Direction.N, 50, 2, 0, false));
 
 		// Bonus
-		list.add(new MoreBombBonus(new Position(100, 300), this, getPlayer()));
-		list.add(new MoreBombBonus(new Position(750, 50), this, getPlayer()));
-		list.add(new MoreBombBonus(new Position(400, 400), this, getPlayer()));
+//		list.add(new MoreBombBonus(new Position(100, 300), this, getPlayer()));
+//		list.add(new MoreBombBonus(new Position(750, 50), this, getPlayer()));
+//		list.add(new MoreBombBonus(new Position(400, 400), this, getPlayer()));
 		// list.add(new IncreaseSpeedBonus(new Position(100, 100), this, getPlayer()));
-		list.add(new IncreaseSpeedBonus(new Position(550, 400), this, getPlayer()));
+//		list.add(new IncreaseSpeedBonus(new Position(550, 400), this, getPlayer()));
 		list.add(new IncreaseSpeedBonus(new Position(650, 250), this, getPlayer()));
+		list.add(new IncreaseSpeedBonus(new Position(650, 450), this, getPlayer()));// vi du vi tri de kiem tra thay doi di chuyen
+		list.add(new Brick(new Position(550, 200), this));// add brick de chan path ngan nhat cua monter toi  increBonus
 	}
 	// private void updateEntity() {
 	// for (int i = 0; i < ; i++) {
@@ -464,15 +465,24 @@ public class EntityManager extends Observable {
 
 	public int[][] theBrickArr() {
 		int[][] arr = new int[11][16];
-		int x, y;
-		Entity e;
-		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i) instanceof Brick) {
-				e = list.get(i);
-				x = e.getPosition().getX() / 50;
-				y = e.getPosition().getY() / 50;
-				arr[y][x] = 1;
+		for (int i = 0; i < arr.length; i++) {
+			for (int j = 0; j < arr[0].length; j++) {
+				Entity en = this.getEntityFromPosition(new Position(j * 50, i * 50));
+				if (en instanceof Wall || en instanceof Brick || en instanceof Bomb) {
+					arr[i][j] = 1;
+				} else {
+					arr[i][j] = 0;
+				}
 			}
+
+		}
+		for (int i = 0; i < arr.length; i++) {
+			for (int j = 0; j < arr[0].length; j++) {
+				System.out.print(arr[i][j]);
+				System.out.print("\t");
+
+			}
+			System.out.println();
 		}
 		return arr;
 	}
@@ -528,10 +538,9 @@ public class EntityManager extends Observable {
 		return arr;
 	}
 
-	
 	public static void main(String[] args) {
 		EntityManager en = new EntityManager();
-		 System.out.println(en.theBrickArr());
-//		System.out.println(en.howManyBrickCanBurn());
+		System.out.println(en.theBrickArr());
+		// System.out.println(en.howManyBrickCanBurn());
 	}
 }

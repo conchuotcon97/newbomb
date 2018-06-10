@@ -17,7 +17,7 @@ public class IncreaseSpeedBonus extends BonusComponent{
 	public IncreaseSpeedBonus(Position po, EntityManager manager, MovealeObject player) {
 		super(po,manager);
 		this.player = player;
-		image = new ImageIcon("image/bonus_speed.png").getImage();
+		image = new ImageIcon("images/bonus_speed.png").getImage();
 	}
 
 
