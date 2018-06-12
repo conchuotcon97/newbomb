@@ -179,28 +179,28 @@ public class Monster extends MovealeObject implements Runnable, Observer {
 
 	// Returns the direction the ai player should move in to approach a powerup or
 	// player
-	public Direction getApproachMove(Position pos) {
-		if (pos.getX() - this.getPosition().getX() > 0) {
-			if (monstercanmove(pos)) {
-				return Direction.E;
-			}
-		} else if (pos.getX() - this.getPosition().getX() < 0) {
-			if (monstercanmove(pos)) {
-				return this.getDirection();
-			}
-		}
-		if (pos.getY() - this.getPosition().getY() < 0) {
-			if (monstercanmove(pos)) {
-				return Direction.N;
-			}
-		} else if (pos.getY() - this.getPosition().getY() > 0) {
-			if (monstercanmove(pos)) {
-				return Direction.S;
-			}
-		}
-		return this.getDirection();
-
-	}
+//	public Direction getApproachMove(Position pos) {
+//		if (pos.getX() - this.getPosition().getX() > 0) {
+//			if (monstercanmove(pos)) {
+//				return Direction.E;
+//			}
+//		} else if (pos.getX() - this.getPosition().getX() < 0) {
+//			if (monstercanmove(pos)) {
+//				return this.getDirection();
+//			}
+//		}
+//		if (pos.getY() - this.getPosition().getY() < 0) {
+//			if (monstercanmove(pos)) {
+//				return Direction.N;
+//			}
+//		} else if (pos.getY() - this.getPosition().getY() > 0) {
+//			if (monstercanmove(pos)) {
+//				return Direction.S;
+//			}
+//		}
+//		return this.getDirection();
+//
+//	}
 
 	public boolean checkUp(Position pos) {
 		if (manager.getEntityFromPosition(new Position(pos.getX(), pos.getY() - 50)) == null)
@@ -441,7 +441,6 @@ public class Monster extends MovealeObject implements Runnable, Observer {
 
 	@Override
 	public void run() {
-		Random r = new Random();
 
 		// int times = 0;
 		while (true) {
