@@ -179,28 +179,28 @@ public class Monster extends MovealeObject implements Runnable, Observer {
 
 	// Returns the direction the ai player should move in to approach a powerup or
 	// player
-//	public Direction getApproachMove(Position pos) {
-//		if (pos.getX() - this.getPosition().getX() > 0) {
-//			if (monstercanmove(pos)) {
-//				return Direction.E;
-//			}
-//		} else if (pos.getX() - this.getPosition().getX() < 0) {
-//			if (monstercanmove(pos)) {
-//				return this.getDirection();
-//			}
-//		}
-//		if (pos.getY() - this.getPosition().getY() < 0) {
-//			if (monstercanmove(pos)) {
-//				return Direction.N;
-//			}
-//		} else if (pos.getY() - this.getPosition().getY() > 0) {
-//			if (monstercanmove(pos)) {
-//				return Direction.S;
-//			}
-//		}
-//		return this.getDirection();
-//
-//	}
+	// public Direction getApproachMove(Position pos) {
+	// if (pos.getX() - this.getPosition().getX() > 0) {
+	// if (monstercanmove(pos)) {
+	// return Direction.E;
+	// }
+	// } else if (pos.getX() - this.getPosition().getX() < 0) {
+	// if (monstercanmove(pos)) {
+	// return this.getDirection();
+	// }
+	// }
+	// if (pos.getY() - this.getPosition().getY() < 0) {
+	// if (monstercanmove(pos)) {
+	// return Direction.N;
+	// }
+	// } else if (pos.getY() - this.getPosition().getY() > 0) {
+	// if (monstercanmove(pos)) {
+	// return Direction.S;
+	// }
+	// }
+	// return this.getDirection();
+	//
+	// }
 
 	public boolean checkUp(Position pos) {
 		if (manager.getEntityFromPosition(new Position(pos.getX(), pos.getY() - 50)) == null)
@@ -378,16 +378,24 @@ public class Monster extends MovealeObject implements Runnable, Observer {
 	}
 
 	public Direction get_ai_dir() {
-		Direction dir = Direction.MiD;
+		Direction dir = this.getDirection();
 		switch (getPlan()) {
+
 		case "GET_POWERUP": {
 			// dir = getApproachMove(getClosestPowerup());
 			Position target = getClosestPowerup();
 			List<Direction> lst = getPathDir(target);
-			dir = lst.get(0);
-			lst.remove(0);
 			if (lst.isEmpty()) {
-				manager.removeEntity(manager.getEntityFromPosition(target));
+				Random r = new Random();
+				System.out.println("direction random" + Direction.values()[r.nextInt(4)]);
+				setDirection(Direction.values()[r.nextInt(4)]);
+
+			} else {
+				dir = lst.get(0);
+				lst.remove(0);
+				if (lst.isEmpty()) {
+					manager.removeEntity(manager.getEntityFromPosition(target));
+				}
 			}
 			// this.putBoom();
 			// dropBombIfBreakable(manager.getPlayer());
@@ -396,19 +404,25 @@ public class Monster extends MovealeObject implements Runnable, Observer {
 		case "APPROACH_PLAYER": {
 			Position target = manager.getPlayer().getPosition();
 			List<Direction> lst = getPathDir(target);
-			dir = lst.get(0);
-			lst.remove(0);
-			if(lst.size()<=2) {
-			// dir = getApproachMove(pos);
-			 this.putBoom();
+			if (lst.size() == 0) {
+				Random r = new Random();
+				setDirection(Direction.values()[r.nextInt(4)]);
+			} else {
+				dir = lst.get(0);
+
+				lst.remove(0);
+				if (lst.size() <= 2) {
+					// dir = getApproachMove(pos);
+					// this.putBoom();
+				}
+				// if (inBombRange(pos, player->tile_position, player->bomb.range)){
+				// player->plant_bomb = true;
+				// }
 			}
-			// if (inBombRange(pos, player->tile_position, player->bomb.range)){
-			// player->plant_bomb = true;
-			// }
 			break;
 		}
 		case "AVOID_BOMB": {
-			 dir = avoidBombMove();
+			dir = avoidBombMove();
 			break;
 		}
 		}
@@ -445,6 +459,7 @@ public class Monster extends MovealeObject implements Runnable, Observer {
 		// int times = 0;
 		while (true) {
 			move();
+			System.out.println("Direction  sap di:  " + get_ai_dir());
 			setDirection(get_ai_dir());
 			manager.notifyChanged();
 			// times++;
@@ -453,7 +468,7 @@ public class Monster extends MovealeObject implements Runnable, Observer {
 			// times = 0;
 			// }
 			try {
-				Thread.sleep(1 / 1000000000);
+				Thread.sleep(1 / 900000000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

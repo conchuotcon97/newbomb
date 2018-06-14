@@ -73,7 +73,7 @@ public class Bomb extends Entity implements Runnable {
 		}
 		// System.out.println((int) (b.RANGE / 2));
 		List<Bomb>lst= new ArrayList<>();
-		lst.stream().forEach();
+//		lst.stream().forEach();
 	}
 
 }
