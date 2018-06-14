@@ -397,6 +397,21 @@ public class Monster extends MovealeObject implements Runnable, Observer {
 					manager.removeEntity(manager.getEntityFromPosition(target));
 				}
 			}
+//			if (lst == null) {
+//				Random r = new Random();
+//				System.out.println("direction random" + Direction.values()[r.nextInt(4)]);
+//				setDirection(Direction.values()[r.nextInt(4)]);
+//
+//			} else {
+//
+//				// manager.notifyChanged();
+//				
+//				dir = lst.get(0);
+//				lst.remove(0);
+//				if (lst.isEmpty()) {
+//					manager.removeEntity(manager.getEntityFromPosition(target));
+//				}
+//			}
 			// this.putBoom();
 			// dropBombIfBreakable(manager.getPlayer());
 			break;

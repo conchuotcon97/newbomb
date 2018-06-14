@@ -149,18 +149,18 @@ public class Player extends MovealeObject implements Observer {
 		while (it.hasNext()) {
 			Entity en = it.next();
 			
-			if (en instanceof Monster) {
-				setDie(isDie);
-				canmove = false;
-				this.setPosition(new Position(50, 50));
-				return true;
-			}
-			if (en instanceof Flame) {
-				setDie(isDie);
-				canmove = false;
-				this.setPosition(new Position(50, 50));
-				return true;
-			}
+//			if (en instanceof Monster) {
+//				setDie(isDie);
+//				canmove = false;
+//				this.setPosition(new Position(50, 50));
+//				return true;
+//			}
+//			if (en instanceof Flame) {
+//				setDie(isDie);
+//				canmove = false;
+//				this.setPosition(new Position(50, 50));
+//				return true;
+//			}
 			if ( en instanceof Wall || en instanceof Brick || en instanceof Bomb) {
 				List<Entity> list = manager.getBoundsList(this);
 				canmove = false;

@@ -10,7 +10,7 @@ import javax.swing.ImageIcon;
 
 public class Bomb extends Entity implements Runnable {
 	public static final int BOMB_TIME = 2000;
-	private int RANGE = 5;
+	private int RANGE = 3;
 
 	public Bomb(Position position, EntityManager manager) {
 		super(position, manager);

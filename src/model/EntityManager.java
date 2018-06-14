@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
 import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.JOptionPane;
 
@@ -24,9 +25,9 @@ public class EntityManager extends Observable {
 	private Player player2;
 
 	public EntityManager() {
-		player = new Player(new Position(50, 50), this, Direction.N, 50, 2, 0, false);
-		player2 = new Player(new Position(750, 450), this, Direction.E, 50, 2, 0, false);
-		this.list = new Vector<>();
+		player = new Player(new Position(50, 50), this, Direction.N, 50, 1, 0, false);
+		player2 = new Player(new Position(750, 450), this, Direction.E, 50, 1, 0, false);
+		this.list = new CopyOnWriteArrayList<>();
 		list.add(new Wall(new Position(0, 0), this));
 		list.add(new Wall(new Position(0, 50), this));
 		list.add(new Wall(new Position(0, 100), this));
@@ -171,6 +172,11 @@ public class EntityManager extends Observable {
 		list.add(new Wall(new Position(350, 400), this));
 		list.add(new Wall(new Position(600, 400), this));
 
+		// Bonus
+		list.add(new MoreBombBonus(new Position(100, 300), this, getPlayer()));
+		list.add(new MoreBombBonus(new Position(250, 50), this, getPlayer()));
+		list.add(new MoreBombBonus(new Position(400, 150), this, getPlayer()));
+
 		// Brick
 		list.add(new Brick(new Position(50, 450), this));
 		list.add(new Brick(new Position(100, 450), this));
@@ -193,44 +199,40 @@ public class EntityManager extends Observable {
 		list.add(new Brick(new Position(150, 350), this));
 		list.add(new Brick(new Position(100, 350), this));
 
-		list.add(new Brick(new Position(750, 100), this));
 		list.add(new Brick(new Position(300, 50), this));
 		list.add(new Brick(new Position(300, 150), this));
 		list.add(new Brick(new Position(350, 150), this));
 		list.add(new Brick(new Position(400, 250), this));
-//		 list.add(new Brick(new Position(650, 300), this));
-		 list.add(new Brick(new Position(700, 300), this));
-		 list.add(new Brick(new Position(700, 350), this));
-		 list.add(new Brick(new Position(700, 400), this));
-//		
-//		 list.add(new Brick(new Position(50, 150), this));
-//		 list.add(new Brick(new Position(100, 150), this));
-//		 list.add(new Brick(new Position(150, 150), this));
-//		 list.add(new Brick(new Position(150, 200), this));
-//		 list.add(new Brick(new Position(600, 450), this));
-//		 list.add(new Brick(new Position(650, 400), this));
-		
-		 list.add(new Brick(new Position(700, 100), this));
-		 list.add(new Brick(new Position(650, 100), this));
-		 list.add(new Brick(new Position(650, 50), this));
-		 list.add(new Brick(new Position(600, 50), this));
-		 list.add(new Brick(new Position(500, 300), this));
-		 list.add(new Brick(new Position(500, 350), this));
-		 list.add(new Brick(new Position(500, 400), this));
-		 list.add(new Brick(new Position(550, 450), this));
-		 list.add(new Brick(new Position(400, 450), this));
-		 list.add(new Brick(new Position(300, 400), this));
-//		 list.add(new Brick(new Position(300, 300), this));
-//		 list.add(new Brick(new Position(250, 300), this));
-		
-		 list.add(new Brick(new Position(450, 100), this));
-		 list.add(new Brick(new Position(500, 100), this));
-		 list.add(new Brick(new Position(400, 100), this));
-		 list.add(new Brick(new Position(400, 50), this));
-		 list.add(new Brick(new Position(300, 50), this));
-		 list.add(new Brick(new Position(750, 250), this));
-		list.add(new Brick(new Position(750, 200), this));
-		list.add(new Brick(new Position(750, 150), this));
+		list.add(new Brick(new Position(650, 300), this));
+		list.add(new Brick(new Position(700, 300), this));
+		list.add(new Brick(new Position(700, 350), this));
+		list.add(new Brick(new Position(700, 400), this));
+
+		list.add(new Brick(new Position(50, 150), this));
+		list.add(new Brick(new Position(100, 150), this));
+		list.add(new Brick(new Position(150, 150), this));
+		list.add(new Brick(new Position(150, 200), this));
+		list.add(new Brick(new Position(600, 450), this));
+		list.add(new Brick(new Position(650, 400), this));
+
+		list.add(new Brick(new Position(700, 100), this));
+		list.add(new Brick(new Position(650, 100), this));
+		list.add(new Brick(new Position(650, 50), this));
+		list.add(new Brick(new Position(600, 50), this));
+		list.add(new Brick(new Position(500, 300), this));
+		list.add(new Brick(new Position(500, 350), this));
+		list.add(new Brick(new Position(500, 400), this));
+		list.add(new Brick(new Position(550, 450), this));
+		list.add(new Brick(new Position(400, 450), this));
+		list.add(new Brick(new Position(300, 400), this));
+		list.add(new Brick(new Position(300, 300), this));
+		list.add(new Brick(new Position(250, 300), this));
+
+		list.add(new Brick(new Position(450, 100), this));
+		list.add(new Brick(new Position(500, 100), this));
+		list.add(new Brick(new Position(400, 100), this));
+		list.add(new Brick(new Position(400, 50), this));
+		list.add(new Brick(new Position(300, 50), this));
 		list.add(new Brick(new Position(150, 50), this));
 		list.add(new Brick(new Position(100, 100), this));
 		// Monster
@@ -241,15 +243,12 @@ public class EntityManager extends Observable {
 		// list.add(new Monster(new Position(450, 150), this, Direction.N, 50);
 		list.add(new Monster(new Position(450, 150), this, Direction.N, 50, 2, 0, false));
 
-		// Bonus
-		list.add(new MoreBombBonus(new Position(100, 300), this, getPlayer()));
-		list.add(new MoreBombBonus(new Position(750, 50), this, getPlayer()));
-		list.add(new MoreBombBonus(new Position(400, 400), this, getPlayer()));
-		// list.add(new IncreaseSpeedBonus(new Position(100, 100), this, getPlayer()));
-//		list.add(new IncreaseSpeedBonus(new Position(550, 400), this, getPlayer()));
-		list.add(new IncreaseSpeedBonus(new Position(650, 250), this, getPlayer()));
-		list.add(new IncreaseSpeedBonus(new Position(650, 450), this, getPlayer()));// vi du vi tri de kiem tra thay doi di chuyen
-		list.add(new Brick(new Position(550, 200), this));// add brick de chan path ngan nhat cua monter toi  increBonus
+		list.add(new MoreBombBonus(new Position(100, 100), this, getPlayer()));
+		list.add(new MoreBombBonus(new Position(550, 400), this, getPlayer()));
+		list.add(new MoreBombBonus(new Position(650, 250), this, getPlayer()));
+		list.add(new MoreBombBonus(new Position(650, 450), this, getPlayer()));// vi du vi tri de kiem tra thay doi di
+																				// chuyen
+		list.add(new Brick(new Position(550, 200), this));// add brick de chan path ngan nhat cua monter toi increBonus
 	}
 	// private void updateEntity() {
 	// for (int i = 0; i < ; i++) {
